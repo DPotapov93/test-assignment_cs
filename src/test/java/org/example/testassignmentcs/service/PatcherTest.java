@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.LocalDate;
 import org.example.testassignmentcs.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,6 +44,7 @@ class PatcherTest {
     }
 
     @Test
+    @DisplayName("Verify internPatcher() method works when change all fields")
     void internPatcher_PatchAppliedWithAllFields_Ok() {
         patcher.internPatcher(existingUserDto, incompleteUserDto);
 
@@ -58,6 +60,7 @@ class PatcherTest {
     }
 
     @Test
+    @DisplayName("Verify internPatcher() method works when change at least on field")
     void internPatch_PatchAppliedWithOneField_Ok() {
         UserDto oneFieldUserDto = new UserDto()
                 .setEmail("changed@example.com");
@@ -72,6 +75,7 @@ class PatcherTest {
     }
 
     @Test
+    @DisplayName("Verify internPatcher() method don`t work when existingDto is null")
     void internPatcher_ExistingUserDtoIsNull_ReturnsException() {
         RuntimeException exception = assertThrows(RuntimeException.class,
                 () -> patcher.internPatcher(null, incompleteUserDto));

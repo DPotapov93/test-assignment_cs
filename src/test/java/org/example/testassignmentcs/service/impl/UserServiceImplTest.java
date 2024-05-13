@@ -116,6 +116,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Verify patchUpdate() method works")
     void patchUpdate_ValidUserIdAndValidUserDto_Ok() {
         Long id = 1L;
         User userFromDb = new User()
@@ -163,12 +164,14 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("patchUpdate() method donn`t work(non-existing id)")
     void patchUpdate_InValidId_ReturnsException() {
         assertThrows(EntityNotFoundException.class,
                 () -> userService.patchUpdate(anyLong(), new UserDto()));
     }
 
     @Test
+    @DisplayName("Verify putUpdate() method works")
     public void putUpdate_ValidRequestDto_Ok() {
         Long id = 1L;
         UserCreateRequestDto requestDto = new UserCreateRequestDto()
@@ -185,12 +188,14 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("putUpdate() method donn`t work(non-existing id)")
     void putUpdate_InValidId_ReturnsException() {
         assertThrows(EntityNotFoundException.class,
                 () -> userService.putUpdate(anyLong(), new UserCreateRequestDto()));
     }
 
     @Test
+    @DisplayName("Verify findAllUsersAgeBetween() method works")
     void findAllUsersAgeBetween_ValidDates_ReturnsWrapperDto() {
         LocalDate fromDate = LocalDate.of(1999, 1, 1);
         LocalDate toDate = LocalDate.of(2000, 1, 1);
@@ -255,6 +260,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("findAllUsersAgeBetween() method donn`t work('from' is less than 'to')")
     void findAllUsersAgeBetween_InValidDateFrom_ReturnsException() {
         LocalDate fromDate = LocalDate.of(2000, 1, 1);
         LocalDate toDate = LocalDate.of(1999, 1, 1);
