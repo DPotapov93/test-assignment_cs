@@ -4,6 +4,6 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class ResponseDto {
-    private List<UserDto> data;
+public class WrapperDto<T> {
+    private List<T> data;
 }

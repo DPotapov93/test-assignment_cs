@@ -2,10 +2,12 @@ package org.example.testassignmentcs.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
 
 @Data
+@Accessors(chain = true)
 public class UserCreateRequestDto {
     @NotNull
     @Email(message = "Must be valid")

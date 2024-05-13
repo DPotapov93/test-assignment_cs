@@ -6,8 +6,13 @@ import org.example.testassignmentcs.dto.UserDto;
 import org.example.testassignmentcs.model.User;
 import org.mapstruct.Mapper;
 
+import java.util.Optional;
+
 @Mapper(config = MapperConfig.class)
 public interface UserMapper {
     UserDto toDto(User user);
+
     User toModel(UserCreateRequestDto requestDto);
+
+    User toModelFromUserDto(UserDto userDto);
 }

@@ -3,10 +3,12 @@ package org.example.testassignmentcs.model;
 import java.time.LocalDate;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "users")
 @Data
+@Accessors(chain = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
