@@ -1,9 +1,8 @@
 package org.example.testassignmentcs.dto;
 
+import java.time.LocalDate;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.time.LocalDate;
 
 @Data
 @Accessors(chain = true)

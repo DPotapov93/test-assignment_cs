@@ -3,10 +3,9 @@ package org.example.testassignmentcs.service.impl;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-
 import org.example.testassignmentcs.dto.UserCreateRequestDto;
-import org.example.testassignmentcs.dto.WrapperDto;
 import org.example.testassignmentcs.dto.UserDto;
+import org.example.testassignmentcs.dto.WrapperDto;
 import org.example.testassignmentcs.exception.EntityNotFoundException;
 import org.example.testassignmentcs.exception.IllegalArgumentException;
 import org.example.testassignmentcs.exception.RegistrationException;
@@ -36,7 +35,13 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final Patcher patcher;
 
-    public UserServiceImpl(@Value("${api.adult_age}") int adultAge, UserRepository userRepository, UserMapper userMapper, Patcher patcher) {
+    public UserServiceImpl(
+            @Value("${api.adult_age}")
+            int adultAge,
+            UserRepository userRepository,
+            UserMapper userMapper,
+            Patcher patcher
+    ) {
         this.adultAge = adultAge;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
@@ -69,7 +74,9 @@ public class UserServiceImpl implements UserService {
     public void patchUpdate(Long id, UserDto userDto) {
         UserDto existUserDto = userRepository.findById(id)
                         .map(userMapper::toDto)
-                        .orElseThrow(() -> new EntityNotFoundException(FIND_BY_ID_EXCEPTION_MESSAGE + id));
+                        .orElseThrow(
+                                () -> new EntityNotFoundException(FIND_BY_ID_EXCEPTION_MESSAGE + id)
+                        );
         patcher.internPatcher(existUserDto, userDto);
         checkUserAge(userDto.getBirthDate());
         User userPatch = userMapper.toModelFromUserDto(existUserDto);

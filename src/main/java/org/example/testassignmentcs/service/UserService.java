@@ -1,11 +1,10 @@
 package org.example.testassignmentcs.service;
 
-import org.example.testassignmentcs.dto.UserCreateRequestDto;
-import org.example.testassignmentcs.dto.WrapperDto;
-import org.example.testassignmentcs.dto.UserDto;
-import org.springframework.data.domain.Pageable;
-
 import java.time.LocalDate;
+import org.example.testassignmentcs.dto.UserCreateRequestDto;
+import org.example.testassignmentcs.dto.UserDto;
+import org.example.testassignmentcs.dto.WrapperDto;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
     WrapperDto<UserDto> findAll();

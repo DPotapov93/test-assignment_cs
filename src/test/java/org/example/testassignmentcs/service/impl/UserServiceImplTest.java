@@ -1,5 +1,18 @@
 package org.example.testassignmentcs.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import org.example.testassignmentcs.dto.UserCreateRequestDto;
 import org.example.testassignmentcs.dto.UserDto;
 import org.example.testassignmentcs.dto.WrapperDto;
@@ -18,14 +31,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
     private static final String EMAIL_EXCEPTION_MESSAGE
@@ -41,7 +46,12 @@ class UserServiceImplTest {
     private final UserMapper userMapper = Mockito.mock(UserMapper.class);
     private final Patcher patcher = Mockito.mock(Patcher.class);
 
-    private final UserServiceImpl userService = new UserServiceImpl(18, userRepository, userMapper, patcher);
+    private final UserServiceImpl userService = new UserServiceImpl(
+            18,
+            userRepository,
+            userMapper,
+            patcher
+    );
 
     @Test
     void test() {
@@ -59,7 +69,8 @@ class UserServiceImplTest {
                 .setBirthDate(LocalDate.of(1990, 1, 1))
                 .setAddress("Baker Street")
                 .setPhoneNumber("0679876543");
-        Long id =1L;
+
+        Long id = 1L;
         User user = new User()
                 .setId(id)
                 .setEmail(requestDto.getEmail())
@@ -160,14 +171,14 @@ class UserServiceImplTest {
     @Test
     public void putUpdate_ValidRequestDto_Ok() {
         Long id = 1L;
-        UserCreateRequestDto requestDto = new UserCreateRequestDto(/* заполните поля DTO */)
+        UserCreateRequestDto requestDto = new UserCreateRequestDto()
                 .setEmail("user1@example.com")
                 .setFirstName("John")
                 .setLastName("Smith")
                 .setBirthDate(LocalDate.of(1990, 1, 1));
 
         when(userRepository.existsById(id)).thenReturn(true);
-        when(userMapper.toModel(requestDto)).thenReturn(new User(/* заполните данные пользователя */));
+        when(userMapper.toModel(requestDto)).thenReturn(new User());
 
         assertDoesNotThrow(() -> userService.putUpdate(id, requestDto));
         verify(userRepository, times(1)).save(any());
@@ -188,7 +199,7 @@ class UserServiceImplTest {
                 .setEmail("john@example.com")
                 .setFirstName("John")
                 .setLastName("Smith")
-                .setBirthDate(LocalDate.of(1999, 1 ,1));
+                .setBirthDate(LocalDate.of(1999, 1,1));
         User david = new User()
                 .setId(2L)
                 .setEmail("david@example.com")
@@ -201,7 +212,7 @@ class UserServiceImplTest {
                 .setEmail("john@example.com")
                 .setFirstName("John")
                 .setLastName("Smith")
-                .setBirthDate(LocalDate.of(1999, 1 ,1));
+                .setBirthDate(LocalDate.of(1999, 1,1));
         UserDto davidDto = new UserDto()
                 .setId(2L)
                 .setEmail("david@example.com")
@@ -233,8 +244,14 @@ class UserServiceImplTest {
         assertEquals(expected.getData(), actual.getData());
         assertEquals(expected.getData().get(0), actual.getData().get(0));
         assertEquals(expected.getData().get(1), actual.getData().get(1));
-        assertEquals(expected.getData().get(0).getBirthDate(), actual.getData().get(0).getBirthDate());
-        assertEquals(expected.getData().get(1).getFirstName(), actual.getData().get(1).getFirstName());
+        assertEquals(
+                expected.getData().get(0).getBirthDate(),
+                actual.getData().get(0).getBirthDate()
+        );
+        assertEquals(
+                expected.getData().get(1).getFirstName(),
+                actual.getData().get(1).getFirstName()
+        );
     }
 
     @Test
@@ -243,6 +260,10 @@ class UserServiceImplTest {
         LocalDate toDate = LocalDate.of(1999, 1, 1);
         when(userRepository.findAllByBirthDateBetween(fromDate, toDate, PageRequest.of(0, 10)))
                 .thenThrow(new IllegalArgumentException(DATES_EXCEPTION_MESSAGE));
-        assertThrows(IllegalArgumentException.class, () -> userService.findAllUsersAgeBetween(fromDate, toDate, PageRequest.of(0, 10)));
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.findAllUsersAgeBetween(
+                        fromDate,
+                        toDate,
+                        PageRequest.of(0, 10)));
     }
 }

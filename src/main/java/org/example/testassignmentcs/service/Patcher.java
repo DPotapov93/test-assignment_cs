@@ -1,12 +1,13 @@
 package org.example.testassignmentcs.service;
 
+import java.lang.reflect.Field;
 import org.example.testassignmentcs.dto.UserDto;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
-
 @Component
 public class Patcher {
+    private static final String PATCH_EXCEPTION_MESSAGE = "Error while applying patch";
+
     public void internPatcher(
             UserDto existingUserDto,
             UserDto incompleteUserDto
@@ -23,8 +24,8 @@ public class Patcher {
                 }
                 field.setAccessible(false);
             }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Error while applying patch");
+        } catch (RuntimeException | IllegalAccessException e) {
+            throw new RuntimeException(PATCH_EXCEPTION_MESSAGE);
         }
     }
 }
