@@ -9,18 +9,13 @@ import org.example.testassignmentcs.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class PatcherTest {
     private static final String PATCH_EXCEPTION_MESSAGE = "Error while applying patch";
     private static UserDto existingUserDto;
     private static UserDto incompleteUserDto;
 
-    @InjectMocks
-    private Patcher patcher;
+    private final Patcher patcher = new Patcher();
 
     @BeforeEach
     void setUp() {
@@ -60,18 +55,35 @@ class PatcherTest {
     }
 
     @Test
-    @DisplayName("Verify internPatcher() method works when change at least on field")
+    @DisplayName("Verify internPatcher() method works when change at least one field")
     void internPatch_PatchAppliedWithOneField_Ok() {
+        String changedEmail = "changed@example.com";
         UserDto oneFieldUserDto = new UserDto()
-                .setEmail("changed@example.com");
+                .setEmail(changedEmail);
 
         patcher.internPatcher(existingUserDto, oneFieldUserDto);
 
         assertNotNull(existingUserDto);
         assertNotNull(oneFieldUserDto);
         assertEquals(1L, existingUserDto.getId());
-        assertEquals("changed@example.com", existingUserDto.getEmail());
+        assertEquals(changedEmail, existingUserDto.getEmail());
         assertEquals("John", existingUserDto.getFirstName());
+    }
+
+    @Test
+    @DisplayName("Verify internPatcher() method works when all fields are null and"
+            + "existingUserDto will not change")
+    void internPatch_PatchAppliedWithAllFieldsAreNull_Ok() {
+        patcher.internPatcher(existingUserDto, new UserDto());
+        assertNotNull(existingUserDto);
+        assertEquals(1L, existingUserDto.getId());
+        assertEquals("john@example.com", existingUserDto.getEmail());
+        assertEquals("John", existingUserDto.getFirstName());
+        assertEquals("Smith", existingUserDto.getLastName());
+        assertEquals(LocalDate.of(1990,1,1), existingUserDto.getBirthDate());
+        assertEquals("Baker Street", existingUserDto.getAddress());
+        assertEquals("0677377711", existingUserDto.getPhoneNumber());
+
     }
 
     @Test

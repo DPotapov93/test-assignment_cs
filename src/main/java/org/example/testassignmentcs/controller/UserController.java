@@ -29,12 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping
-    public WrapperDto<UserDto> getAllUsers() {
-        return userService.findAll();
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserCreateRequestDto requestDto) {
@@ -44,12 +38,14 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void patchUser(@PathVariable Long id,
                           @RequestBody UserDto userDto) {
         userService.patchUpdate(id, userDto);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void putUser(@PathVariable Long id,
                         @RequestBody @Valid UserCreateRequestDto requestDto) {
         userService.putUpdate(id, requestDto);
@@ -63,8 +59,8 @@ public class UserController {
         return userService.findAllUsersAgeBetween(fromDate, toDate, pageable);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         userService.deleteById(id);
     }

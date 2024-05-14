@@ -17,7 +17,6 @@ import org.example.testassignmentcs.dto.UserCreateRequestDto;
 import org.example.testassignmentcs.dto.UserDto;
 import org.example.testassignmentcs.dto.WrapperDto;
 import org.example.testassignmentcs.exception.EntityNotFoundException;
-import org.example.testassignmentcs.exception.IllegalArgumentException;
 import org.example.testassignmentcs.exception.RegistrationException;
 import org.example.testassignmentcs.mapper.UserMapper;
 import org.example.testassignmentcs.model.User;
@@ -33,11 +32,12 @@ import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
+    private static final int ADULT_AGE = 18;
     private static final String EMAIL_EXCEPTION_MESSAGE
             = "This email is already registered";
 
     private static final String AGE_EXCEPTION_MESSAGE
-            = "User must be at least 18 years old";
+            = "User's age must be at least: ";
 
     private static final String DATES_EXCEPTION_MESSAGE
             = "'from' date should be before 'to' date";
@@ -47,17 +47,11 @@ class UserServiceImplTest {
     private final Patcher patcher = Mockito.mock(Patcher.class);
 
     private final UserServiceImpl userService = new UserServiceImpl(
-            18,
+            ADULT_AGE,
             userRepository,
             userMapper,
             patcher
     );
-
-    @Test
-    void test() {
-        userService.findAll();
-        Mockito.verify(userRepository, Mockito.times(1)).findAll();
-    }
 
     @Test
     @DisplayName("Verify save() method works")
@@ -112,7 +106,7 @@ class UserServiceImplTest {
                 .setBirthDate(LocalDate.of(2015, 1, 1));
         RegistrationException exception
                 = assertThrows(RegistrationException.class, () -> userService.save(requestDto));
-        assertEquals(AGE_EXCEPTION_MESSAGE, exception.getMessage());
+        assertEquals(AGE_EXCEPTION_MESSAGE + ADULT_AGE, exception.getMessage());
     }
 
     @Test

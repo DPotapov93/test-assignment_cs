@@ -49,7 +49,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return buildResponse(exception, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(java.lang.IllegalArgumentException.class)
     public ResponseEntity<Object> illegalArgumentExceptionHandler(Exception exception) {
         return buildResponse(exception, HttpStatus.BAD_REQUEST);
     }
