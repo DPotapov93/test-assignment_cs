@@ -7,7 +7,6 @@ import org.example.testassignmentcs.dto.UserCreateRequestDto;
 import org.example.testassignmentcs.dto.UserDto;
 import org.example.testassignmentcs.dto.WrapperDto;
 import org.example.testassignmentcs.exception.EntityNotFoundException;
-import org.example.testassignmentcs.exception.IllegalArgumentException;
 import org.example.testassignmentcs.exception.RegistrationException;
 import org.example.testassignmentcs.mapper.UserMapper;
 import org.example.testassignmentcs.model.User;
@@ -21,14 +20,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
     private static final String AGE_EXCEPTION_MESSAGE
-            = "User must be at least 18 years old";
+            = "User's age must be at least: ";
     private static final String EMAIL_EXCEPTION_MESSAGE
             = "This email is already registered";
     private static final String FIND_BY_ID_EXCEPTION_MESSAGE
             = "Can`t find user by id: ";
     private static final String DATES_EXCEPTION_MESSAGE
             = "'from' date should be before 'to' date";
-    @Value("${api.adult_age}")
     private final int adultAge;
 
     private final UserRepository userRepository;
@@ -46,17 +44,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.patcher = patcher;
-    }
-
-    @Override
-    public WrapperDto<UserDto> findAll() {
-        List<UserDto> users = userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
-        WrapperDto<UserDto> responseDto = new WrapperDto<>();
-        responseDto.setData(users);
-        return responseDto;
     }
 
     @Override
@@ -122,7 +109,7 @@ public class UserServiceImpl implements UserService {
         Period period = Period.between(birthDate, LocalDate.now());
         int userAge = period.getYears();
         if (userAge < adultAge) {
-            throw new RegistrationException(AGE_EXCEPTION_MESSAGE);
+            throw new RegistrationException(AGE_EXCEPTION_MESSAGE + adultAge);
         }
     }
 }
